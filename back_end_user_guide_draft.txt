@@ -29,7 +29,7 @@ Send Captain ID in the system to choose a gate.
 If the same Captain ID tries to choose an already taken gate, Success Response is sent.
 If a different Captain ID tries to choose an already taken gate, Error Response is sent.
 
-Possible Error Outputs: "Invalid Gate Number", "Invalid Captain ID", "Gate Already Taken"
+Possible Error Outputs: "Invalid Gate Number", "Invalid Captain ID"
 
 Call example: PUT http://localhost:8080/service/gates/10
 Body (JSON):
@@ -48,40 +48,23 @@ Response (JSON):
     "error": "Invalid Captain ID"
 }
 
-3. GET All Messages
+3. GET All Messages for First Officer
 
-Get all service messages (like "Gate 4 reserved for Captain ID 9") that are available right now.
+Get all service messages (like "Gate 4 reserved") for the First Officer ID.
 Can return an empty array but never null. All messages are sorted from the newest to the oldest.
 
-Call example: GET http://localhost:8080/service/messages
+Call example: GET http://localhost:8080/service/messages/4
 
 Response:
 {
     messages: [
         {
             "time": "11.05.2017 11:44",
-            "text": "Gate 4 reserved for Captain ID 9"
+            "text": "Gate 4 reserved"
         },
         {
             "time": "09.05.2017 19:11",
-            "text": "Gate 19 reserved for Captain ID 4"
-        }
-    ]
-}
-
-4. GET Messages from the last X seconds
-
-Get service messages from the last X seconds (100 seconds in example call).
-Can return an empty array but never null. All messages are sorted from the newest to the oldest.
-
-Call example: GET http://localhost:8080/service/messages/100
-
-Response:
-{
-    messages: [
-        {
-            "time": "11.05.2017 11:44",
-            "text": "Gate 4 reserved for Captain ID 9"
+            "text": "Gate 19 reserved"
         }
     ]
 }
