@@ -6,7 +6,8 @@ Get an array of gates (can be empty, never null) with their numbers and coordina
 
 Call example: GET http://localhost:8080/service/gates
 
-Response (JSON):
+HTTP Code: 200
+Response body:
 {
     "gates": [
         {
@@ -31,14 +32,12 @@ Call example: PUT http://localhost:8080/service/gates/10
 
 Possible errors: "Invalid Gate Number"
 
-Response (JSON):
 -- On success --
-{
-    "success": true
-}
+HTTP Code: 200
 -- On failure --
+HTTP Code: 400
+Respons Body:
 {
-    "success": false,
     "error": "Invalid Gate Number"
 }
 
@@ -51,14 +50,14 @@ Call example: GET http://localhost:8080/service/gates/selected
 Possible erros: "Captain did not select a gate"
 
 -- On success --
-Response:
+HTTP Code: 200
+Response body:
 {
-    "success": true,
     "gate": 4
 }
 -- On failure --
-Response:
+HTTP Code: 400
+Response body:
 {
-    "success": false,
     "error": "Captain did not select a gate"
 }
