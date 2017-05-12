@@ -24,18 +24,12 @@ Response (JSON):
 
 2. PUT Gates
 
-Send Captain ID in the system to choose a gate.
-
-If the same Captain ID tries to choose an already taken gate, Success Response is sent.
-If a different Captain ID tries to choose an already taken gate, Error Response is sent.
-
-Possible Error Outputs: "Invalid Gate Number", "Invalid Captain ID"
+Send a gate number to be selected.
+It's called by the Captain device.
 
 Call example: PUT http://localhost:8080/service/gates/10
-Body (JSON):
-{
-    "captainId": 4
-}
+
+Possible errors: "Invalid Gate Number"
 
 Response (JSON):
 -- On success --
@@ -44,27 +38,28 @@ Response (JSON):
 }
 -- On failure --
 {
-    "success": false
-    "error": "Invalid Captain ID"
+    "success": false,
+    "error": "Invalid Gate Number"
 }
 
-3. GET All Messages for First Officer
+3. GET Selected Gate
 
-Get all service messages (like "Gate 4 reserved") for the First Officer ID.
-Can return an empty array but never null. All messages are sorted from the newest to the oldest.
+Get a gate number for the First Officer which was selected by the Captain.
+It's called by the First Officer device.
 
-Call example: GET http://localhost:8080/service/messages/4
+Call example: GET http://localhost:8080/service/gates/chosen
 
+Possible erros: "Captain did not choose a gate"
+
+-- On success --
 Response:
 {
-    messages: [
-        {
-            "time": "11.05.2017 11:44",
-            "text": "Gate 4 reserved"
-        },
-        {
-            "time": "09.05.2017 19:11",
-            "text": "Gate 19 reserved"
-        }
-    ]
+    "success": true,
+    "gate": 4
+}
+-- On failure --
+Response:
+{
+    "success": false,
+    "error": "Captain did not choose a gate"
 }
