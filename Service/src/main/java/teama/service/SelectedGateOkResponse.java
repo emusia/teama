@@ -10,10 +10,17 @@ package teama.service;
  * @author emkej
  */
 public class SelectedGateOkResponse {
-    public int gate;
+    private int gate;
     
     public SelectedGateOkResponse(int gate)
     {
         this.gate = gate;
+    }
+
+    /**
+     * @return the gate
+     */
+    public int getGate() {
+        return gate;
     }
 }

@@ -7,7 +7,6 @@ import static spark.Spark.*;
 public class Service 
 {
     final static ArrayList<Gate> gates = new ArrayList<>();
-    final static ArrayList<String> communicates = new ArrayList<>();
     private static int currentGateNumber = -1;
     
     public static void main(String[] args)
@@ -43,9 +42,9 @@ public class Service
             }
             catch(NumberFormatException e){
                 res.status(400);
-                return gson.toJson(new ErrorResponse("Provided parameter is not an integer"));
+                return gson.toJson(new ErrorResponse("Invalid Gate Number"));
             }
-            if(parsedGateNumber < 0){
+            if(!gates.stream().anyMatch(g -> g.getNumber() == parsedGateNumber)){
                 res.status(400);
                 return gson.toJson(new ErrorResponse("Invalid Gate Number"));
             }

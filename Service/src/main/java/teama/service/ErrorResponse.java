@@ -10,10 +10,17 @@ package teama.service;
  * @author emkej
  */
 public class ErrorResponse {
-    public String error;
+    private String error;
     
     public ErrorResponse(String errorMessage)
     {
         this.error = errorMessage;
+    }
+
+    /**
+     * @return the error
+     */
+    public String getError() {
+        return error;
     }
 }
