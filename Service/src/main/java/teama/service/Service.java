@@ -46,12 +46,13 @@ public class Service {
                 return gson.toJson(new ErrorResponse("Invalid Gate Number"));
             }
 
-            if (!service.hasGateNumber(parsedGateNumber)) {
+            Optional<Gate> current = service.getGateByNumber(parsedGateNumber);
+            if (!current.isPresent()) {
                 res.status(400);
                 return gson.toJson(new ErrorResponse("Invalid Gate Number"));
             }
 
-            service.setCurrentGate(service.getGateByNumber(parsedGateNumber).get());
+            service.setCurrentGate(current.get());
             res.status(200);
             return "";
         });
@@ -78,10 +79,6 @@ public class Service {
     
     public void setCurrentGate(Gate gate) {
         currentGate = Optional.ofNullable(gate);
-    }
-    
-    public boolean hasGateNumber(int gateNumber) {
-        return gates.stream().anyMatch(gate -> gate.getNumber() == gateNumber);
     }
     
     private final ArrayList<Gate> gates = new ArrayList<>();
