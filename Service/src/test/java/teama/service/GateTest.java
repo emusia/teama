@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package teama.service;
 
 import static org.junit.Assert.*;
@@ -12,7 +7,6 @@ import static org.junit.Assert.*;
  * @author emusial
  */
 public class GateTest {
-    
     public GateTest() {
     }
 
@@ -51,5 +45,4 @@ public class GateTest {
         double result = instance.getLon();
         assertEquals(expResult, result, 0.0);
     }
-    
 }
