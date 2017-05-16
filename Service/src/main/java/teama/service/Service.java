@@ -1,56 +1,86 @@
 package teama.service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import com.google.gson.Gson;
 import static spark.Spark.*;
 
-public class Service 
-{
-    final static ArrayList<Gate> gates = new ArrayList<>();
-    private static int currentGateNumber = -1;
-    
-    public static void main(String[] args)
-    {
+/**
+ * Main Service class
+ * @author jaksurma, MarcinPultyn
+ */
+public class Service {   
+    public static void main(String[] args) {
+        Service service = new Service();
         Gson gson = new Gson();
-        
-        gates.add(new Gate(28, 54.38200, 18.46196));
-        gates.add(new Gate(26, 54.38170, 18.46315));
-        gates.add(new Gate(24, 54.38142, 18.46431));
-        gates.add(new Gate(22, 54.38113, 18.46548));
         
         // sets server's port
         port(8080);
-             
+
         // GET for gates list
-        get("/gates", (req, res) -> gson.toJson(new GateList(gates)));
-        
-        get("gates/selected", (req, res) -> {
-            if(currentGateNumber != -1)
-                return gson.toJson(new SelectedGateOkResponse(currentGateNumber));
-            else
-            {
+        get("/gates", (req, res) -> {
+            res.type("application/json");
+            return gson.toJson(new GateList(service.getGates()));
+        });
+
+        // GET for a selected gate
+        get("/gates/selected", (req, res) -> {
+            res.type("application/json");
+            if (service.getCurrentGate().isPresent()) {
+                return gson.toJson(new SelectedGateOkResponse(service.getCurrentGate().get().getNumber()));
+            } else {
                 res.status(400);
                 return gson.toJson(new ErrorResponse("Captain did not select a gate"));
             }
         });
-        
-        put("/service/gates/:gateNumber", (req, res) -> {
+
+        // PUT to select a gate
+        put("/gates/:gateNumber", (req, res) -> {
+            res.type("application/json");
             String gateNumber = req.params(":gateNumber");
             int parsedGateNumber;
-            try{
+            try {
                 parsedGateNumber = Integer.parseInt(gateNumber);
-            }
-            catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 res.status(400);
                 return gson.toJson(new ErrorResponse("Invalid Gate Number"));
             }
-            if(!gates.stream().anyMatch(g -> g.getNumber() == parsedGateNumber)){
+
+            Optional<Gate> current = service.getGateByNumber(parsedGateNumber);
+            if (!current.isPresent()) {
                 res.status(400);
                 return gson.toJson(new ErrorResponse("Invalid Gate Number"));
             }
-            currentGateNumber = parsedGateNumber;
+
+            service.setCurrentGate(current.get());
             res.status(200);
-            return res;
+            return "";
         });
     }
+    
+    public Service() {
+        gates.add(new Gate(28, 54.38200, 18.46196));
+        gates.add(new Gate(26, 54.38170, 18.46315));
+        gates.add(new Gate(24, 54.38142, 18.46431));
+        gates.add(new Gate(22, 54.38113, 18.46548));
+    }
+    
+    public ArrayList<Gate> getGates() {
+        return gates;
+    }
+    
+    public Optional<Gate> getGateByNumber(int number) {
+        return gates.stream().filter(gate -> gate.getNumber() == number).findFirst();
+    }
+    
+    public Optional<Gate> getCurrentGate() {
+        return currentGate;
+    }
+    
+    public void setCurrentGate(Gate gate) {
+        currentGate = Optional.ofNullable(gate);
+    }
+    
+    private final ArrayList<Gate> gates = new ArrayList<>();
+    private Optional<Gate> currentGate = Optional.empty();
 }
