@@ -7,8 +7,7 @@ import static spark.Spark.*;
 public class Service 
 {
     final static ArrayList<Gate> gates = new ArrayList<>();
-    final static ArrayList<String> communicates = new ArrayList<>();
-    private int currentGateNumber = 0;
+    private static int currentGateNumber = -1;
     
     public static void main(String[] args)
     {
@@ -25,5 +24,33 @@ public class Service
         // GET for gates list
         get("/gates", (req, res) -> gson.toJson(new GateList(gates)));
         
+        get("gates/selected", (req, res) -> {
+            if(currentGateNumber != -1)
+                return gson.toJson(new SelectedGateOkResponse(currentGateNumber));
+            else
+            {
+                res.status(400);
+                return gson.toJson(new ErrorResponse("Captain did not select a gate"));
+            }
+        });
+        
+        put("/service/gates/:gateNumber", (req, res) -> {
+            String gateNumber = req.params(":gateNumber");
+            int parsedGateNumber;
+            try{
+                parsedGateNumber = Integer.parseInt(gateNumber);
+            }
+            catch(NumberFormatException e){
+                res.status(400);
+                return gson.toJson(new ErrorResponse("Invalid Gate Number"));
+            }
+            if(!gates.stream().anyMatch(g -> g.getNumber() == parsedGateNumber)){
+                res.status(400);
+                return gson.toJson(new ErrorResponse("Invalid Gate Number"));
+            }
+            currentGateNumber = parsedGateNumber;
+            res.status(200);
+            return res;
+        });
     }
 }
