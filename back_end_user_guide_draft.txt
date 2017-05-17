@@ -4,7 +4,7 @@
 
 Get an array of gates (can be empty, never null) with their numbers and coordinates.
 
-Call example: GET http://localhost:8080/service/gates
+Call example: GET http://localhost:8080/gates
 
 HTTP Code: 200
 Response body:
@@ -28,7 +28,7 @@ Response body:
 Send a gate number to be selected.
 It's called by the Captain device.
 
-Call example: PUT http://localhost:8080/service/gates/10
+Call example: PUT http://localhost:8080/gates/10
 
 Possible errors: "Invalid Gate Number"
 
@@ -46,7 +46,7 @@ Respons Body:
 Get a gate number for the First Officer which was selected by the Captain.
 It's called by the First Officer device.
 
-Call example: GET http://localhost:8080/service/gates/selected
+Call example: GET http://localhost:8080/gates/selected
 Possible erros: "Captain did not select a gate"
 
 -- On success --
