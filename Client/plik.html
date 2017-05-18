@@ -136,15 +136,19 @@
     }
 	function selectMarker(num)
 	{
-	//tutaj musi być metoda put, która wysyła info o wybranym gate	
-	for(var i=0;i<markers.markers.length;i++){
-		//	if (markers.markers[i].gateNumber == num)
-		//	//akcja dla wybranej pinezki
-		//	else 
-		//	// dla pozostałych
-        }	
-	clicked=true;
-	hidePopups();				
+		var request = serverAddres + "/selectGate?gateNumber=" + num;
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.open("GET", request, true);
+		xmlHttp.send(null);
+					
+		for(var i=0;i<markers.markers.length;i++){
+			//	if (markers.markers[i].gateNumber == num)
+			//	//akcja dla wybranej pinezki
+			//	else 
+			//	// dla pozostałych
+			}	
+		clicked=true;
+		hidePopups();			
 	}
    
 	function hidePopups(){
