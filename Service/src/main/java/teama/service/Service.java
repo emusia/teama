@@ -20,12 +20,14 @@ public class Service {
         // GET for gates list
         get("/gates", (req, res) -> {
             res.type("application/json");
+			res.header("Access-Control-Allow-Origin", "*");
             return gson.toJson(new GateList(service.getGates()));
         });
 
         // GET for a selected gate
         get("/gates/selected", (req, res) -> {
             res.type("application/json");
+			res.header("Access-Control-Allow-Origin", "*");
             if (service.getCurrentGate().isPresent()) {
                 return gson.toJson(new SelectedGateOkResponse(service.getCurrentGate().get().getNumber()));
             } else {
@@ -37,6 +39,7 @@ public class Service {
         // PUT to select a gate
         put("/gates/:gateNumber", (req, res) -> {
             res.type("application/json");
+			res.header("Access-Control-Allow-Origin", "*");
             String gateNumber = req.params(":gateNumber");
             int parsedGateNumber;
             try {
