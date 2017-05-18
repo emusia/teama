@@ -136,6 +136,20 @@
     }
 	function selectMarker(num)
 	{
+	
+	
+	  $.ajax({
+                    url: serverAddres + "/gates/" + num,    //Your api url
+                    type: 'PUT',   //type is any HTTP method
+                    data: {
+                        data: num
+                    },      //Data as js object
+                    success: function () {
+                    }
+                })
+                ;
+				
+				
 	//tutaj musi być metoda put, która wysyła info o wybranym gate	
 	for(var i=0;i<markers.markers.length;i++){
 		//	if (markers.markers[i].gateNumber == num)
