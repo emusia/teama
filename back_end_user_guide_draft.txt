@@ -23,20 +23,26 @@ Response body:
     ]
 }
 
-2. PUT Gate
+2. POST Gate
 
 Send a gate number to be selected.
 It's called by the Captain device.
 
-Call example: PUT http://localhost:8080/gates/10
-
 Possible errors: "Invalid Gate Number"
+
+Call example: POST http://localhost:8080/gates
+Request body:
+{
+    "gate": 10
+}
 
 -- On success --
 HTTP Code: 200
+Response body:
+{}
 -- On failure --
 HTTP Code: 400
-Respons Body:
+Response body:
 {
     "error": "Invalid Gate Number"
 }
@@ -46,8 +52,9 @@ Respons Body:
 Get a gate number for the First Officer which was selected by the Captain.
 It's called by the First Officer device.
 
-Call example: GET http://localhost:8080/gates/selected
 Possible erros: "Captain did not select a gate"
+
+Call example: GET http://localhost:8080/gates/selected
 
 -- On success --
 HTTP Code: 200
