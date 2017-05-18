@@ -15,6 +15,8 @@
     //<![CDATA[
  
     var map;
+	//tutaj trzeba wpisać poprawny adres serwera;
+	var serverAddres = "http://192.168.1.2:8080";
     var mercator = new OpenLayers.Projection("EPSG:900913");
     var geographic = new OpenLayers.Projection("EPSG:4326");
     var directionsService;
@@ -75,39 +77,35 @@
 		events.register("mousedown",map,function(e){
 			hidePopups();
 			return true;
-		},true);
-        
-        var markery = /*getMarkers();*/ {
-							"gates": [
-								{ "lat": 54.37914, "lon": 18.47427, "number": 1  },
-								{ "lat": 54.37933, "lon": 18.47365, "number": 2  },
-								{ "lat": 54.37953, "lon": 18.47289, "number": 3  }
-							]
-						}
-						
-        addMarkers(markery.gates);
+		},true);  
+		//pobranie markerów z serwera
+        getMarkers();
+       
     }
-    
-    function getMarkers(){
-        $.get( "http://www.mocky.io/v2/591317b80f0000e307f858eb", function( data ) {
-            debugger;
-            return data;
-        });
-    }
-    
-    function selectMarker()
-    {
-        debugger;
-    }
-   
+	
+	function getMarkers(){
+	var request = serverAddres + "/gates";
+	var xmlHttp = new XMLHttpRequest();
+		xmlHttp.onreadystatechange = function() { 
+			if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
+				var markery = JSON.parse(xmlHttp.responseText);
+				if (markery != undefined)
+				 addMarkers(markery.gates);
+				 }
+		}
+		xmlHttp.open("GET", request, true); // true for asynchronous 
+		xmlHttp.send(null);
+    } 
+	   
     function addMarkers(gates){
+	
         for(var i=0;i<gates.length;i++){
 			var label = "<input type='button' value='Wybieram "+gates[i].number+"' onclick='selectMarker("+gates[i].number+")'>"
-            addMarker(new OpenLayers.LonLat(gates[i].lon, gates[i].lat).transform(geographic, mercator), label);
+            addMarker(new OpenLayers.LonLat(gates[i].lon, gates[i].lat).transform(geographic, mercator), label,gates[i].number);
         }
     }
     
-    function addMarker(lonlat, tekst)
+    function addMarker(lonlat, tekst,gateNumber)
     {
         var feature = new OpenLayers.Feature(markers, lonlat);
         feature.closeBox = true;
@@ -116,7 +114,7 @@
         feature.data.overflow = "auto";
  
         var marker = feature.createMarker();
- 
+		marker.gateNumber = gateNumber;
         var markerClick = function (evt) {
 		numClicks=0;
 			if (clicked == false) {
@@ -138,7 +136,13 @@
     }
 	function selectMarker(num)
 	{
-	//obsługa kliknięcia wybranego markera (jego numer jest podany jako parametr)
+	//tutaj musi być metoda put, która wysyła info o wybranym gate	
+	for(var i=0;i<markers.markers.length;i++){
+		//	if (markers.markers[i].gateNumber == num)
+		//	//akcja dla wybranej pinezki
+		//	else 
+		//	// dla pozostałych
+        }	
 	clicked=true;
 	hidePopups();				
 	}
