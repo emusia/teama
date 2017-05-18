@@ -1,11 +1,11 @@
 package teama.service;
 
 /**
- * Class for GET selected JSON response
+ * Class for POST/GET JSON request/response
  * @author MarcinPultyn
  */
-public class SelectedGateOkResponse {
-    public SelectedGateOkResponse(int gate) {
+public class SelectedGate {
+    public SelectedGate(int gate) {
         this.gate = gate;
     }
 

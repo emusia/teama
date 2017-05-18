@@ -3,8 +3,7 @@ package teama.service;
 import java.util.ArrayList;
 import java.util.Optional;
 import com.google.gson.Gson;
-import spark.Request;
-import spark.Response;
+import com.google.gson.JsonSyntaxException;
 import static spark.Spark.*;
 
 /**
@@ -33,27 +32,27 @@ public class Service {
             res.type("application/json");
             res.header("Access-Control-Allow-Origin", "*");
             if (service.getCurrentGate().isPresent()) {
-                return gson.toJson(new SelectedGateOkResponse(service.getCurrentGate().get().getNumber()));
+                return gson.toJson(new SelectedGate(service.getCurrentGate().get().getNumber()));
             } else {
                 res.status(400);
                 return gson.toJson(new ErrorResponse("Captain did not select a gate"));
             }
         });
 
-        // GET to select a gate
-        get("/selectGate", (Request req, Response res) -> {
+        // POST to select a gate
+        post("/gates", (req, res) -> {
             res.type("application/json");
             res.header("Access-Control-Allow-Origin", "*");
-            String gateNumber = req.queryParams("gateNumber");
-            int parsedGateNumber;
+            
+            SelectedGate selected;
             try {
-                parsedGateNumber = Integer.parseInt(gateNumber);
-            } catch (NumberFormatException e) {
+                selected = gson.fromJson(req.body(), SelectedGate.class);
+            } catch (JsonSyntaxException e) {
                 res.status(400);
                 return gson.toJson(new ErrorResponse("Invalid Gate Number"));
             }
 
-            Optional<Gate> current = service.getGateByNumber(parsedGateNumber);
+            Optional<Gate> current = service.getGateByNumber(selected.getGate());
             if (!current.isPresent()) {
                 res.status(400);
                 return gson.toJson(new ErrorResponse("Invalid Gate Number"));
@@ -61,7 +60,7 @@ public class Service {
 
             service.setCurrentGate(current.get());
             res.status(200);
-            return "";
+            return "{}";
         });
 
     }
